@@ -3,29 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>To-Do List</title>
+  <title>TASK∙OS // MAITE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>📋 To-Do List - Maite</h1>
+  <div class="bg-grid"></div>
+  <div class="glow-orb orb1"></div>
+  <div class="glow-orb orb2"></div>
 
-    <form id="task-form" class="task-form">
-      <input type="text" id="task-input" placeholder="Escribe una nueva tarea..." required>
-      <button type="submit">Agregar</button>
-    </form>
+  <div class="app">
+    <header class="app-header">
+      <div class="header-line"></div>
+      <h1>TASK<span class="accent">∙</span>OS</h1>
+      <p class="tagline">SISTEMA DE GESTIÓN // <span class="user">MAITE</span></p>
+      <div class="header-line"></div>
+    </header>
 
-    <div class="filter-wrapper">
-      <input type="text" id="filter-input" placeholder="🔍 Filtrar tareas...">
+    <div class="card form-card">
+      <div class="card-label">// NUEVA TAREA</div>
+      <form id="task-form" class="task-form">
+        <input type="text" id="task-input" placeholder="INGRESA DESCRIPCIÓN..." autocomplete="off" required>
+        <button type="submit">
+          <span class="btn-icon">+</span>
+          <span>AGREGAR</span>
+        </button>
+      </form>
+    </div>
+
+    <div class="card filter-card">
+      <div class="card-label">// BÚSQUEDA</div>
+      <input type="text" id="filter-input" placeholder="FILTRAR TAREAS...">
     </div>
 
     <div id="status-message" class="status-message"></div>
 
-    <ul id="task-list" class="task-list"></ul>
-
-    <p id="empty-message" class="empty-message" style="display:none;">No hay tareas para mostrar.</p>
+    <div class="card list-card">
+      <div class="card-label">// REGISTROS <span id="task-count"></span></div>
+      <ul id="task-list" class="task-list"></ul>
+      <p id="empty-message" class="empty-message" style="display:none;">[ SIN REGISTROS EN EL SISTEMA ]</p>
+    </div>
   </div>
 
   <script src="app.js"></script>
 </body>
 </html>
+
