@@ -1,0 +1,16 @@
+[Unit]
+Description=Backend Node.js - To-Do List API
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=deploy
+WorkingDirectory=/var/www/todolist/backend
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production
+EnvironmentFile=/var/www/todolist/backend/.env
+
+[Install]
+WantedBy=multi-user.target
