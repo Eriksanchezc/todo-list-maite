@@ -6,23 +6,23 @@ const filterInput = document.getElementById('filter-input');
 const taskList = document.getElementById('task-list');
 const emptyMessage = document.getElementById('empty-message');
 const statusMessage = document.getElementById('status-message');
+const taskCount = document.getElementById('task-count');
 
 let allTasks = [];
 
 function showStatus(msg) {
-  statusMessage.textContent = msg;
+  statusMessage.textContent = '⚠ ' + msg;
   setTimeout(() => (statusMessage.textContent = ''), 3000);
 }
 
 async function fetchTasks() {
   try {
     const res = await fetch(API_URL);
-    if (!res.ok) throw new Error('Error al cargar tareas');
+    if (!res.ok) throw new Error();
     allTasks = await res.json();
     renderTasks(allTasks);
-  } catch (err) {
-    showStatus('No se pudieron cargar las tareas.');
-    console.error(err);
+  } catch {
+    showStatus('ERROR DE CONEXIÓN AL SERVIDOR');
   }
 }
 
@@ -35,15 +35,20 @@ function renderTasks(tasks) {
     li.className = 'task-item' + (task.completed ? ' completed' : '');
     li.dataset.id = task.id;
     li.innerHTML = `
-      <input type="checkbox" ${task.completed ? 'checked' : ''} />
+      <input type="checkbox" class="check-box" ${task.completed ? 'checked' : ''} />
       <span class="task-title">${escapeHtml(task.title)}</span>
       <div class="task-actions">
-        <button class="edit-btn" title="Editar">✏️</button>
-        <button class="delete-btn" title="Eliminar">🗑️</button>
+        <button class="edit-btn" title="Editar">✎</button>
+        <button class="delete-btn" title="Eliminar">✕</button>
       </div>
     `;
     taskList.appendChild(li);
   });
+
+  const pendientes = tasks.filter(t => !t.completed).length;
+  taskCount.textContent = tasks.length
+    ? `(${tasks.length} TOTAL / ${pendientes} ACTIVAS)`
+    : '';
 }
 
 function escapeHtml(str) {
@@ -66,7 +71,7 @@ taskForm.addEventListener('submit', async (e) => {
     taskInput.value = '';
     await fetchTasks();
   } catch {
-    showStatus('No se pudo agregar la tarea.');
+    showStatus('NO SE PUDO AGREGAR LA TAREA');
   }
 });
 
@@ -76,18 +81,18 @@ taskList.addEventListener('click', async (e) => {
   const id = li.dataset.id;
 
   if (e.target.classList.contains('delete-btn')) {
-    if (!confirm('¿Eliminar esta tarea?')) return;
+    if (!confirm('¿ELIMINAR ESTE REGISTRO?')) return;
     try {
       await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
       await fetchTasks();
     } catch {
-      showStatus('No se pudo eliminar la tarea.');
+      showStatus('ERROR AL ELIMINAR');
     }
   }
 
   if (e.target.classList.contains('edit-btn') || e.target.classList.contains('task-title')) {
     const currentTitle = li.querySelector('.task-title').textContent;
-    const newTitle = prompt('Editar tarea:', currentTitle);
+    const newTitle = prompt('EDITAR TAREA:', currentTitle);
     if (!newTitle || newTitle.trim() === '' || newTitle === currentTitle) return;
     try {
       await fetch(`${API_URL}/${id}`, {
@@ -97,13 +102,13 @@ taskList.addEventListener('click', async (e) => {
       });
       await fetchTasks();
     } catch {
-      showStatus('No se pudo editar la tarea.');
+      showStatus('ERROR AL ACTUALIZAR');
     }
   }
 });
 
 taskList.addEventListener('change', async (e) => {
-  if (e.target.type !== 'checkbox') return;
+  if (!e.target.classList.contains('check-box')) return;
   const li = e.target.closest('.task-item');
   const id = li.dataset.id;
   try {
@@ -114,7 +119,7 @@ taskList.addEventListener('change', async (e) => {
     });
     await fetchTasks();
   } catch {
-    showStatus('No se pudo actualizar el estado.');
+    showStatus('ERROR AL ACTUALIZAR ESTADO');
   }
 });
 
