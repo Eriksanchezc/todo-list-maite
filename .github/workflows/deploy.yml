@@ -34,7 +34,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} '
             cd /var/www/todolist/backend &&
-            npm install --production &&
+            /usr/local/bin/npm install
             sudo systemctl restart todolist-backend &&
             sudo systemctl reload nginx
           '
